@@ -18,7 +18,7 @@ class CarController extends AbstractController
         $entityManager = $doctrine->getManager();
 
         $car = new Car();
-        $car->setName(null);
+        $car->setName('Mercedes G63');
         $car->setType('Premium');
         $car->setBrand('Mercedes');
         $car->setImage('https://car-rent-nhivo.s3.ap-southeast-1.amazonaws.com/a3fcadc2de72779042369be4a0daef3e6-2-car-png-file.png');
@@ -29,6 +29,22 @@ class CarController extends AbstractController
         $entityManager->flush();
 
         return new Response('Saved Car: ' . $car->getId());
+    }
+
+    /**
+     * @Route("/car/all", name="car_list_all")
+     */
+    public function showCarAll(ManagerRegistry $doctrine): Response
+    {
+        $cars = $doctrine->getRepository(Car::class)->findAll();
+
+        if (!$cars) {
+            throw $this->createNotFoundException(
+                'No cars found'
+            );
+        }
+
+        return $this->render('car/index.html.twig', ['cars' => $cars]);
     }
 
     /**
