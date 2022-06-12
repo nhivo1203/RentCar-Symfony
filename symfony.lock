@@ -8,6 +8,7 @@
             "ref": "64d8583af5ea57b7afa4aba4b159907f3a148b05"
         }
     },
+
     "sensio/framework-extra-bundle": {
         "version": "6.2",
         "recipe": {
@@ -62,6 +63,15 @@
             "src/Controller/.gitignore",
             "src/Kernel.php"
         ]
+    },
+    "symfony/maker-bundle": {
+        "version": "1.43",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
+        }
     },
     "symfony/monolog-bundle": {
         "version": "3.8",
