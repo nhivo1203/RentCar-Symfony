@@ -8,11 +8,11 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/annotations": "^1.13",
-
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
         "sensio/framework-extra-bundle": "^6.2",
+        "symfony/asset": "6.1.*",
         "symfony/console": "*",
         "symfony/dotenv": "*",
         "symfony/flex": "^2",
@@ -21,13 +21,18 @@
         "symfony/monolog-bundle": "^3.8",
         "symfony/proxy-manager-bridge": "6.1.*",
         "symfony/runtime": "*",
-        "symfony/yaml": "*"
+        "symfony/twig-bundle": "6.1.*",
+        "symfony/validator": "6.1.*",
+        "symfony/yaml": "*",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
     }
     ,
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-
-        "symfony/maker-bundle": "^1.43"
+        "symfony/maker-bundle": "^1.43",
+        "symfony/stopwatch": "6.1.*",
+        "symfony/web-profiler-bundle": "6.1.*"
     },
     "config": {
         "allow-plugins": {

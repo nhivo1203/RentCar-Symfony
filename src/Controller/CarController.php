@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Car;
+use App\Form\AddCarType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,23 +15,27 @@ class CarController extends AbstractController
     /**
      * @Route("/car", name="add_car")
      */
-    public function createCar(ManagerRegistry $doctrine): Response
+    public function createCar(Request $request, ManagerRegistry $doctrine): Response
     {
         $entityManager = $doctrine->getManager();
-
         $car = new Car();
-        $car->setName('Mercedes G63');
-        $car->setType('Premium');
-        $car->setBrand('Mercedes');
-        $car->setImage('https://car-rent-nhivo.s3.ap-southeast-1.amazonaws.com/a3fcadc2de72779042369be4a0daef3e6-2-car-png-file.png');
-        $car->setPrice(1000);
 
-        $entityManager->persist($car);
+        $form = $this->createForm(AddCarType::class, $car);
 
-        $entityManager->flush();
+        $form->handleRequest($request);
 
-        return new Response('Saved Car: ' . $car->getId());
-    }
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $car = $form->getData();
+            $entityManager->persist($car);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('car_list_all');
+        }
+
+        return $this->renderForm('car/add_car.html.twig', [
+            'form' => $form,
+        ]);    }
 
     /**
      * @Route("/car/all", name="car_list_all")
