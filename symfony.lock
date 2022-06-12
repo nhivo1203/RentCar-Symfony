@@ -9,7 +9,8 @@
         }
     },
     "doctrine/doctrine-bundle": {
-        "version": "2.6",
+
+        "version": "2.7",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
