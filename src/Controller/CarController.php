@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Car;
 use App\Form\AddCarType;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\CarRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,37 +13,40 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CarController extends AbstractController
 {
+    private CarRepository $carRepository;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(CarRepository $carRepository, EntityManagerInterface $entityManager)
+    {
+        $this->carRepository = $carRepository;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @Route("/car", name="add_car")
      */
-    public function createCar(Request $request, ManagerRegistry $doctrine): Response
+    public function createCar(Request $request): Response
     {
-        $entityManager = $doctrine->getManager();
         $car = new Car();
-
         $form = $this->createForm(AddCarType::class, $car);
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
             $car = $form->getData();
-            $entityManager->persist($car);
-            $entityManager->flush();
-
+            $this->entityManager->persist($car);
+            $this->entityManager->flush();
             return $this->redirectToRoute('car_list_all');
         }
-
         return $this->renderForm('car/add_car.html.twig', [
             'form' => $form,
-        ]);    }
+        ]);
+    }
 
     /**
      * @Route("/car/all", name="car_list_all")
      */
-    public function showCarAll(ManagerRegistry $doctrine): Response
+    public function getAllCar(): Response
     {
-        $cars = $doctrine->getRepository(Car::class)->findAll();
+        $cars = $this->carRepository->findAll();
 
         if (!$cars) {
             throw $this->createNotFoundException(
@@ -56,9 +60,9 @@ class CarController extends AbstractController
     /**
      * @Route("/car/{id}", name="car_show_details")
      */
-    public function showCarDetails(ManagerRegistry $doctrine, int $id): Response
+    public function getCarDetails(int $id): Response
     {
-        $car = $doctrine->getRepository(Car::class)->find($id);
+        $car = $this->carRepository->find($id);
 
         if (!$car) {
             throw $this->createNotFoundException(
@@ -72,10 +76,9 @@ class CarController extends AbstractController
     /**
      * @Route("/car/edit/{id}", name="car_edit")
      */
-    public function updateCar(ManagerRegistry $doctrine, int $id): Response
+    public function updateCar(int $id): Response
     {
-        $entityManager = $doctrine->getManager();
-        $car = $entityManager->getRepository(Car::class)->find($id);
+        $car = $this->carRepository->find($id);
 
         if (!$car) {
             throw $this->createNotFoundException(
@@ -84,7 +87,7 @@ class CarController extends AbstractController
         }
 
         $car->setName('BMW');
-        $entityManager->flush();
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('car_show_details', [
             'id' => $car->getId(),
@@ -94,10 +97,9 @@ class CarController extends AbstractController
     /**
      * @Route("/car/delete/{id}", name="car_delete")
      */
-    public function deleteCar(ManagerRegistry $doctrine, int $id): Response
+    public function deleteCar(int $id): Response
     {
-        $entityManager = $doctrine->getManager();
-        $car = $entityManager->getRepository(Car::class)->find($id);
+        $car = $this->carRepository->find($id);
 
         if (!$car) {
             throw $this->createNotFoundException(
@@ -105,8 +107,8 @@ class CarController extends AbstractController
             );
         }
 
-        $entityManager->remove($car);
-        $entityManager->flush();
+        $this->entityManager->remove($car);
+        $this->entityManager->flush();
 
         return new Response('Deleted Car: ' . $car->getName());
     }
