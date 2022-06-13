@@ -21,12 +21,18 @@
         "symfony/proxy-manager-bridge": "6.1.*",
         "symfony/runtime": "*",
         "symfony/security-bundle": "6.1.*",
-        "symfony/yaml": "*"
+        "symfony/twig-bundle": "6.1.*",
+        "symfony/yaml": "*",
+        "symfonycasts/verify-email-bundle": "^1.10",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0"
     }
     ,
     "require-dev": {
         "roave/security-advisories": "dev-latest",
-        "symfony/maker-bundle": "^1.43"
+        "symfony/maker-bundle": "^1.43",
+        "symfony/stopwatch": "6.1.*",
+        "symfony/web-profiler-bundle": "6.1.*"
     },
     "config": {
         "allow-plugins": {
