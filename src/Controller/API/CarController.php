@@ -2,23 +2,48 @@
 
 namespace App\Controller\API;
 
-use App\Entity\Car;
 use App\Repository\CarRepository;
+use App\Transfer\CarTransfer;
 use App\Transformer\CarTransformer;
+use Doctrine\ORM\EntityManagerInterface;
+use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CarController extends AbstractController
 {
+    private CarTransfer $carTransfer;
     private CarTransformer $carTransformer;
     private CarRepository $carRepository;
+    private EntityManagerInterface $entityManager;
 
 
-    public function __construct(CarRepository $carRepository, CarTransformer $carTransformer)
+    public function __construct
+    (
+        CarTransfer            $carTransfer,
+        CarRepository          $carRepository,
+        CarTransformer         $carTransformer,
+        EntityManagerInterface $entityManager
+    )
     {
+        $this->carTransfer = $carTransfer;
         $this->carRepository = $carRepository;
         $this->carTransformer = $carTransformer;
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @Route("/api/addcar", name="api_add_car")
+     * @throws JsonException
+     */
+    public function createCar(Request $request): JsonResponse
+    {
+        $car = $this->carTransfer->transfer($request);
+        $this->entityManager->persist($car);
+        $this->entityManager->flush();
+        return new JsonResponse(['data' => $this->carTransformer->transform($car)]);
     }
 
     /**
@@ -43,7 +68,7 @@ class CarController extends AbstractController
     /**
      * @Route("/api/car/{id}", name="api_get_car_details")
      */
-    public function getCarDetails( int $id): JsonResponse
+    public function getCarDetails(int $id): JsonResponse
     {
         $car = $this->carRepository->find($id);
         if (!$car) {

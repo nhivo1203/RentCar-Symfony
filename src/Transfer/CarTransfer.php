@@ -3,10 +3,14 @@
 namespace App\Transfer;
 
 use App\Entity\Car;
+use JsonException;
 use Symfony\Component\HttpFoundation\Request;
 
 class CarTransfer
 {
+    /**
+     * @throws JsonException
+     */
     public function transfer(Request $request): Car
     {
         $car = new Car();
