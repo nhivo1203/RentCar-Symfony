@@ -32,8 +32,7 @@ class CarController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $car = $form->getData();
-            $this->entityManager->persist($car);
-            $this->entityManager->flush();
+            $this->carRepository->add($car,true);
             return $this->redirectToRoute('car_list_all');
         }
         return $this->renderForm('car/add_car.html.twig', [
