@@ -14,7 +14,7 @@ class SecurityController extends AbstractController
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
-    public function index(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->isGranted('ROLE_USER')) {
             return $this->redirectToRoute('login_success');
@@ -28,6 +28,19 @@ class SecurityController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @Route("/login_success", name="login_success")
+     * @return Response
+     */
+    public function loginSuccess(): Response
+    {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('admin');
+        }
+        return $this->redirectToRoute('user_profile');
+    }
+
     /**
      * @Route("/logout", name="logout", methods={"POST"})
      */
@@ -35,18 +48,5 @@ class SecurityController extends AbstractController
     {
         // controller can be blank: it will never be called!
         throw new \RuntimeException('Log Out Errors');
-    }
-
-    /**
-     * @Route("/profile", name="login_success")
-     * @return Response
-     */
-    public function loginSuccess():Response {
-        if ($this->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('admin');
-        }
-        return $this->render('login/success.html.twig', [
-            'controller_name' => 'User',
-        ]);
     }
 }
