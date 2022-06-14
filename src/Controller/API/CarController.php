@@ -10,6 +10,7 @@ use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CarController extends AbstractController
@@ -40,6 +41,10 @@ class CarController extends AbstractController
      */
     public function createCar(Request $request): JsonResponse
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            return $this->json(['errors' => "Access denied"],
+                Response::HTTP_FORBIDDEN);
+        }
         $car = $this->carTransfer->transfer($request);
         $this->entityManager->persist($car);
         $this->entityManager->flush();
@@ -54,9 +59,9 @@ class CarController extends AbstractController
         $carsData = [];
         $cars = $this->carRepository->findAll();
         if (!$cars) {
-            throw $this->createNotFoundException(
-                'No cars found'
-            );
+            return $this->json([
+                'errors' => 'No cars found'
+            ]);
         }
         foreach ($cars as $car) {
             $carTransform = $this->carTransformer->transform($car);
