@@ -13,6 +13,7 @@
         "doctrine/orm": "^2.12",
         "lexik/jwt-authentication-bundle": "^2.16",
         "sensio/framework-extra-bundle": "^6.2",
+        "symfony/asset": "6.1.*",
         "symfony/console": "*",
         "symfony/dotenv": "*",
         "symfony/flex": "^2",
@@ -23,6 +24,7 @@
         "symfony/runtime": "*",
         "symfony/security-bundle": "6.1.*",
         "symfony/twig-bundle": "6.1.*",
+
         "symfony/yaml": "*",
         "symfonycasts/verify-email-bundle": "^1.10",
         "twig/extra-bundle": "^2.12|^3.0",
