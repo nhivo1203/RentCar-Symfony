@@ -1,4 +1,6 @@
 security:
+
+  enable_authenticator_manager: true
   # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
   password_hashers:
     # Use native password hasher, which auto-selects and migrates the best
@@ -60,6 +62,7 @@ security:
     - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
     - { path: /admin, roles: ROLE_ADMIN }
     - { path: ^/profile, roles: ROLE_USER }
+
 
 when@test:
   security:
