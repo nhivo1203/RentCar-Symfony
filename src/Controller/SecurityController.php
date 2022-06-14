@@ -38,15 +38,13 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/profile", name="login_success")
+     * @Route("/login_success", name="login_success")
      * @return Response
      */
     public function loginSuccess():Response {
         if ($this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('admin');
         }
-        return $this->render('login/success.html.twig', [
-            'controller_name' => 'User',
-        ]);
+        return $this->redirectToRoute('user_profile');
     }
 }
