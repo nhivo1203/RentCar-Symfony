@@ -2,4 +2,10 @@ controllers:
     resource: ../src/Controller/
     type: attribute
 api_login_check:
-    path: /api/login_check
+    path: /api/login
+api_controller:
+    resource: ../src/Controller/API/
+    type: attribute
+    prefix: '/api'
+    name_prefix: api_
+    trailing_slash_on_root: false

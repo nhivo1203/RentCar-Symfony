@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -23,6 +24,28 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+//        $this->plainPassword = null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    #[ArrayShape(['id' => "int|null", 'username' => "null|string", 'roles' => "array|string[]"])]
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'username' => $this->getUsername(),
+            'roles' => $this->getRoles(),
+        ];
+    }
 
     public function getId(): ?int
     {
@@ -48,7 +71,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     /**
@@ -83,14 +106,5 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         $this->password = $password;
 
         return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 }

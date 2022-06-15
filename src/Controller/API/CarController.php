@@ -3,9 +3,10 @@
 namespace App\Controller\API;
 
 use App\Repository\CarRepository;
+use App\Services\CarService;
 use App\Transfer\CarTransfer;
 use App\Transformer\CarTransformer;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
 use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,21 +19,21 @@ class CarController extends AbstractController
     private CarTransfer $carTransfer;
     private CarTransformer $carTransformer;
     private CarRepository $carRepository;
-    private EntityManagerInterface $entityManager;
+    private CarService $carService;
 
 
     public function __construct
     (
-        CarTransfer            $carTransfer,
-        CarRepository          $carRepository,
-        CarTransformer         $carTransformer,
-        EntityManagerInterface $entityManager
+        CarTransfer    $carTransfer,
+        CarRepository  $carRepository,
+        CarTransformer $carTransformer,
+        CarService     $carService
     )
     {
         $this->carTransfer = $carTransfer;
         $this->carRepository = $carRepository;
         $this->carTransformer = $carTransformer;
-        $this->entityManager = $entityManager;
+        $this->carService = $carService;
     }
 
     /**
@@ -41,14 +42,12 @@ class CarController extends AbstractController
      */
     public function createCar(Request $request): JsonResponse
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            return $this->json(['errors' => "Access denied"],
-                Response::HTTP_FORBIDDEN);
-        }
         $car = $this->carTransfer->transfer($request);
-        $this->entityManager->persist($car);
-        $this->entityManager->flush();
-        return new JsonResponse(['data' => $this->carTransformer->transform($car)]);
+        $this->carService->addcar($car);
+        return $this->json([
+            'status' => 'success',
+            'data' => $this->carTransformer->transform($car)
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -72,15 +71,11 @@ class CarController extends AbstractController
 
     /**
      * @Route("/api/car/{id}", name="api_get_car_details")
+     * @throws EntityNotFoundException
      */
     public function getCarDetails(int $id): JsonResponse
     {
-        $car = $this->carRepository->find($id);
-        if (!$car) {
-            throw $this->createNotFoundException(
-                'No car found for id ' . $id
-            );
-        }
+        $car = $this->carService->getCar($id);
         $carData = $this->carTransformer->transform($car);
         return new JsonResponse($carData);
     }

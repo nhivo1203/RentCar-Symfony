@@ -19,6 +19,8 @@ security:
       stateless: true
       json_login:
         check_path: /api/login
+        success_handler: lexik_jwt_authentication.handler.authentication_success
+        failure_handler: lexik_jwt_authentication.handler.authentication_failure
     api:
       pattern: ^/api
       stateless: true
@@ -40,9 +42,6 @@ security:
         target: login
         csrf_token_generator: security.csrf.token_manager
       entry_point: form_login
-      json_login:
-        # api_login is a route we will create below
-        check_path: api_login
       http_basic:
         realm: Secured Area
       # activate different ways to authenticate
