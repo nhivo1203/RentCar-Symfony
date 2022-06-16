@@ -16,9 +16,11 @@ class CarTransfer
         $car = new Car();
         $requestData = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $car->setName($requestData['name']);
-        $car->setType($requestData['type']);
+        $car->setDescription($requestData['description']);
+        $car->setColor($requestData['color']);
         $car->setBrand($requestData['brand']);
-        $car->setImage($requestData['image']);
+        $car->setSeats($requestData['seats']);
+        $car->setYear($requestData['year']);
         $car->setPrice($requestData['price']);
 
         return $car;

@@ -49,6 +49,7 @@ class CarService
      */
     public function addCar(Car $car): Car
     {
+        var_dump($car);die();
         $this->carRepository->add($car, true);
         $event = new CarEvent($car);
         $this->dispatcher->dispatch($event, CarEvent::SET);

@@ -151,7 +151,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     {
         if (!$this->cars->contains($car)) {
             $this->cars[] = $car;
-            $car->setCreatedUser($this);
+            $car->setCreatedUserId($this);
         }
 
         return $this;
@@ -161,8 +161,8 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     {
         if ($this->cars->removeElement($car)) {
             // set the owning side to null (unless already changed)
-            if ($car->getCreatedUser() === $this) {
-                $car->setCreatedUser(null);
+            if ($car->getCreatedUserId() === $this) {
+                $car->setCreatedUserId(null);
             }
         }
 

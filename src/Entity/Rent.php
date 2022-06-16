@@ -6,7 +6,7 @@ use App\Repository\RentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RentRepository::class)]
-class Rent
+class Rent extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -35,6 +35,11 @@ class Rent
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'rents')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

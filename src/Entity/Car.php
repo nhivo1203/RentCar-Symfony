@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
-class Car
+class Car extends \App\Entity\AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -41,17 +41,18 @@ class Car
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cars')]
     #[ORM\JoinColumn(nullable: false)]
-    private $created_user;
+    private $created_userId;
 
     #[ORM\OneToOne(inversedBy: 'car', targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private $thumbnail;
+    private $thumbnailId;
 
     #[ORM\OneToMany(mappedBy: 'car_id', targetEntity: Rent::class)]
     private $rents;
 
     public function __construct()
     {
+        $this->created_at = new \DateTimeImmutable();
         $this->rents = new ArrayCollection();
     }
 
@@ -156,26 +157,26 @@ class Car
         return $this;
     }
 
-    public function getCreatedUser(): ?User
+    public function getCreatedUserId(): ?User
     {
-        return $this->created_user;
+        return $this->created_userId;
     }
 
-    public function setCreatedUser(?User $created_user): self
+    public function setCreatedUserId(int $created_userId): self
     {
-        $this->created_user = $created_user;
+        $this->created_userId = $created_userId;
 
         return $this;
     }
 
-    public function getThumbnail(): ?Image
+    public function getThumbnailId(): ?Image
     {
-        return $this->thumbnail;
+        return $this->thumbnailId;
     }
 
-    public function setThumbnail(Image $thumbnail): self
+    public function setThumbnailId(int $thumbnailId): self
     {
-        $this->thumbnail = $thumbnail;
+        $this->thumbnailId = $thumbnailId;
 
         return $this;
     }

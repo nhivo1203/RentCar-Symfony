@@ -2,17 +2,22 @@
 
 namespace App\Controller\API;
 
+use App\Entity\Image;
+use App\Entity\User;
 use App\Repository\CarRepository;
 use App\Services\CarService;
+use App\Services\ImageService;
 use App\Transfer\CarTransfer;
 use App\Transformer\CarTransformer;
 use Doctrine\ORM\EntityNotFoundException;
 use JsonException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class CarController extends AbstractController
 {
@@ -20,30 +25,39 @@ class CarController extends AbstractController
     private CarTransformer $carTransformer;
     private CarRepository $carRepository;
     private CarService $carService;
-
+    private ImageService $imageService;
 
     public function __construct
     (
-        CarTransfer    $carTransfer,
-        CarRepository  $carRepository,
-        CarTransformer $carTransformer,
-        CarService     $carService
+        CarTransfer     $carTransfer,
+        CarRepository   $carRepository,
+        CarTransformer  $carTransformer,
+        CarService      $carService,
+        ImageService $imageService
     )
     {
         $this->carTransfer = $carTransfer;
         $this->carRepository = $carRepository;
         $this->carTransformer = $carTransformer;
         $this->carService = $carService;
+        $this->imageService = $imageService;
     }
 
     /**
+     * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
      * @Route("/api/addcar", name="api_add_car")
      * @throws JsonException
      */
     public function createCar(Request $request): JsonResponse
     {
         $car = $this->carTransfer->transfer($request);
-        $this->carService->addcar($car);
+        $user = $this->getUser();
+        $image = new Image();
+        $image->setPath($request->toArray()['thumbnail']);
+        $this->imageService->addImage($image);
+        $car->setThumbnailId($image->getId());
+        $car->setCreatedUserId($user->getId());
+        $this->carService->addCar($car);
         return $this->json([
             'status' => 'success',
             'data' => $this->carTransformer->transform($car)
@@ -51,6 +65,7 @@ class CarController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
      * @Route("/api/car/all", name="api_car_list_all")
      */
     public function getAllCar(): JsonResponse

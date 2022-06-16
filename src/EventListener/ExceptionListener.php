@@ -2,33 +2,27 @@
 
 namespace App\EventListener;
 
+use App\Traits\JsonResponseTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class ExceptionListener
 {
+    use JsonResponseTrait;
+
     public function onKernelException(ExceptionEvent $event): void
     {
-        // You get the exception object from the received event
         $exception = $event->getThrowable();
-        $message = sprintf(
-            'My Error says: %s with code: %s',
-            $exception->getMessage(),
-            $exception->getCode()
-        );
 
-        // Customize your response object to display the exception details
-        $response = new Response();
-        $response->setContent($message);
-
-        // HttpExceptionInterface is a special type of exception that
-        // holds status code and header details
+        if ($exception instanceof UnauthorizedHttpException) {
+            $response = $this->errors("Unauthorized", Response::HTTP_UNAUTHORIZED);
+        }
         if ($exception instanceof HttpExceptionInterface) {
-            $response->setStatusCode($exception->getStatusCode());
-            $response->headers->replace($exception->getHeaders());
+            $response = $this->errors($exception->getMessage(), Response::HTTP_EXPECTATION_FAILED);
         } else {
-            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            $response = $this->errors("Internal error", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         // sends the modified response object to the event
