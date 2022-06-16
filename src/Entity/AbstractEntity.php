@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-abstract class AbstractEntity
+class AbstractEntity
 {
-
 }
