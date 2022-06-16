@@ -65,7 +65,6 @@ class CarController extends AbstractController
     }
 
     /**
-     * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
      * @Route("/api/car/all", name="api_car_list_all")
      */
     public function getAllCar(): JsonResponse
