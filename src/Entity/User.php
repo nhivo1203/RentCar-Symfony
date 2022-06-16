@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -17,7 +19,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    private $username;
+    private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
@@ -25,24 +27,41 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     #[ORM\Column(type: 'string')]
     private $password;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $name;
+
+    #[ORM\OneToMany(mappedBy: 'created_user_id', targetEntity: Car::class)]
+    private $cars;
+
+    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Rent::class)]
+    private $rents;
+
+    public function __construct()
+    {
+        $this->cars = new ArrayCollection();
+        $this->rents = new ArrayCollection();
+    }
+
     /**
      * @see UserInterface
      */
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
-//        $this->plainPassword = null;
+
+        // $this->plainPassword = null;
     }
 
     /**
      * @see UserInterface
      */
-    #[ArrayShape(['id' => "int|null", 'username' => "null|string", 'roles' => "array|string[]"])]
+
+    #[ArrayShape(['id' => "int|null", 'email' => "null|string", 'roles' => "array|string[]"])]
     public function jsonSerialize(): array
     {
         return [
             'id' => $this->getId(),
-            'username' => $this->getUsername(),
+            'email' => $this->getEmail(),
             'roles' => $this->getRoles(),
         ];
     }
@@ -52,14 +71,14 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         return $this->id;
     }
 
-    public function getUsername(): ?string
+    public function getEmail(): ?string
     {
-        return $this->username;
+        return $this->email;
     }
 
-    public function setUsername(string $username): self
+    public function setEmail(string $email): self
     {
-        $this->username = $username;
+        $this->email = $email;
 
         return $this;
     }
@@ -71,7 +90,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
      */
     public function getUserIdentifier(): string
     {
-        return (string)$this->username;
+        return (string)$this->email;
     }
 
     /**
@@ -107,4 +126,78 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
 
         return $this;
     }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Car>
+     */
+    public function getCars(): Collection
+    {
+        return $this->cars;
+    }
+
+    public function addCar(Car $car): self
+    {
+        if (!$this->cars->contains($car)) {
+            $this->cars[] = $car;
+            $car->setCreatedUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCar(Car $car): self
+    {
+        if ($this->cars->removeElement($car)) {
+            // set the owning side to null (unless already changed)
+            if ($car->getCreatedUser() === $this) {
+                $car->setCreatedUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rent>
+     */
+    public function getRents(): Collection
+    {
+        return $this->rents;
+    }
+
+    public function addRent(Rent $rent): self
+    {
+        if (!$this->rents->contains($rent)) {
+            $this->rents[] = $rent;
+            $rent->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRent(Rent $rent): self
+    {
+        if ($this->rents->removeElement($rent)) {
+            // set the owning side to null (unless already changed)
+            if ($rent->getUser() === $this) {
+                $rent->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
+

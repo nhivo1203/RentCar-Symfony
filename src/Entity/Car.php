@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\CarRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
-class Car extends AbstractEntity
+class Car
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -17,31 +18,47 @@ class Car extends AbstractEntity
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private $type;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $description;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $color;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $brand;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $image;
-
-    #[ORM\Column(type: 'integer')]
     private $price;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private $create_at;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $seats;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $year;
+
+    #[ORM\Column(type: 'date_immutable')]
+    private $created_at;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cars')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $created_user;
+
+    #[ORM\OneToOne(inversedBy: 'car', targetEntity: Image::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private $thumbnail;
+
+    #[ORM\OneToMany(mappedBy: 'car_id', targetEntity: Rent::class)]
+    private $rents;
 
     public function __construct()
     {
-        $this->create_at = new \DateTimeImmutable();
+        $this->rents = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
 
     public function getName(): ?string
     {
@@ -55,14 +72,26 @@ class Car extends AbstractEntity
         return $this;
     }
 
-    public function getType(): ?string
+    public function getDescription(): ?string
     {
-        return $this->type;
+        return $this->description;
     }
 
-    public function setType(string $type): self
+    public function setDescription(?string $description): self
     {
-        $this->type = $type;
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(?string $color): self
+    {
+        $this->color = $color;
 
         return $this;
     }
@@ -72,45 +101,111 @@ class Car extends AbstractEntity
         return $this->brand;
     }
 
-    public function setBrand(string $brand): self
+    public function setBrand(?string $brand): self
     {
         $this->brand = $brand;
 
         return $this;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    public function getPrice(): ?int
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice(int $price): self
+    public function setPrice(string $price): self
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getCreateAt(): ?\DateTimeImmutable
+    public function getSeats(): ?int
     {
-        return $this->create_at;
+        return $this->seats;
     }
 
-    public function setCreateAt(?\DateTimeImmutable $create_at): self
+    public function setSeats(?int $seats): self
     {
-        $this->create_at = $create_at;
+        $this->seats = $seats;
+
+        return $this;
+    }
+
+    public function getYear(): ?int
+    {
+        return $this->year;
+    }
+
+    public function setYear(?int $year): self
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getCreatedUser(): ?User
+    {
+        return $this->created_user;
+    }
+
+    public function setCreatedUser(?User $created_user): self
+    {
+        $this->created_user = $created_user;
+
+        return $this;
+    }
+
+    public function getThumbnail(): ?Image
+    {
+        return $this->thumbnail;
+    }
+
+    public function setThumbnail(Image $thumbnail): self
+    {
+        $this->thumbnail = $thumbnail;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Rent>
+     */
+    public function getRents(): Collection
+    {
+        return $this->rents;
+    }
+
+    public function addRent(Rent $rent): self
+    {
+        if (!$this->rents->contains($rent)) {
+            $this->rents[] = $rent;
+            $rent->setCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRent(Rent $rent): self
+    {
+        if ($this->rents->removeElement($rent)) {
+            // set the owning side to null (unless already changed)
+            if ($rent->getCar() === $this) {
+                $rent->setCar(null);
+            }
+        }
 
         return $this;
     }
