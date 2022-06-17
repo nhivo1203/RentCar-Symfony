@@ -16,7 +16,7 @@ class CarLogger extends BaseLogger
     public function carSet(Car $car): void
     {
         //$this->logger->info(self::SET .': ', [$this->user->getName(), $this->user->getRoles()]);
-        $this->logger->info(self::SET.': ');
+        $this->logger->info(self::SET . ': ');
         $this->logger->info($this->serializer->serialize($car, 'json'));
         $this->logger->info('');
     }
@@ -27,7 +27,7 @@ class CarLogger extends BaseLogger
     public function carUpdate(Car $car): void
     {
         // $this->logger->info(self::UPDATE .': ', [$this->user->getUserName(), $this->user->getRoles()]);
-        $this->logger->info(self::UPDATE.': ');
+        $this->logger->info(self::UPDATE . ': ');
         $this->logger->info($this->serializer->serialize($car, 'json'));
         $this->logger->info('');
     }
@@ -38,7 +38,7 @@ class CarLogger extends BaseLogger
     public function carDelete(Car $car): void
     {
         // $this->logger->info(self::DELETE.': ', [$this->user->getUserName(), $this->user->getRoles()]);
-        $this->logger->info(self::DELETE.': ');
+        $this->logger->info(self::DELETE . ': ');
         $this->logger->info($this->serializer->serialize($car, 'json'));
         $this->logger->info('');
     }

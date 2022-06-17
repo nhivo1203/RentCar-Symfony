@@ -35,14 +35,12 @@ class CarService
      * @param CarRepository $carRepository
      * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct
-    (
-        CarRepository            $carRepository,
+    public function __construct(
+        CarRepository $carRepository,
         EventDispatcherInterface $dispatcher,
-        UserRepository           $userRepository,
-        ImageService             $imageService
-    )
-    {
+        UserRepository $userRepository,
+        ImageService $imageService
+    ) {
         $this->userRepository = $userRepository;
         $this->imageService = $imageService;
         $this->carRepository = $carRepository;
@@ -65,7 +63,7 @@ class CarService
      * @param Car $car
      * @return Car
      */
-    public function addCar(int $userId, string $thumbnailURL, Car $car): Car
+    public function addCar(Car $car, int $userId, string $thumbnailURL): Car
     {
         $user = $this->userRepository->find($userId);
         $image = new Image();
@@ -74,8 +72,10 @@ class CarService
         $car->setThumbnail($image);
         $car->setCreatedUser($user);
         $this->carRepository->add($car, true);
+
         $event = new CarEvent($car);
         $this->dispatcher->dispatch($event, CarEvent::SET);
+
         return $car;
     }
 }

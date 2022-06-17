@@ -55,5 +55,4 @@ class CarSubscriber implements EventSubscriberInterface
     {
         $this->carLogger->carDelete($event->getCar());
     }
-
 }

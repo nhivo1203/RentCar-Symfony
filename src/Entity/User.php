@@ -198,6 +198,4 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
 
         return $this;
     }
-
 }
-

@@ -6,6 +6,7 @@ use App\Repository\CarRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
 class Car extends \App\Entity\AbstractEntity
@@ -15,24 +16,45 @@ class Car extends \App\Entity\AbstractEntity
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $color;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $brand;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private $price;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'integer', nullable: true)]
     private $seats;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'integer', nullable: true)]
     private $year;
 
