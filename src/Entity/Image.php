@@ -17,14 +17,14 @@ class Image extends AbstractEntity
     private $path;
 
     #[ORM\Column(type: 'date_immutable', nullable: true)]
-    private $created_at;
+    private $createdAt;
 
-    #[ORM\OneToOne(mappedBy: 'thumbnail_id', targetEntity: Car::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'thumbnail', targetEntity: Car::class, cascade: ['persist', 'remove'])]
     private $car;
 
     public function __construct()
     {
-        $this->created_at = new \DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -46,12 +46,12 @@ class Image extends AbstractEntity
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $created_at): self
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
@@ -64,8 +64,8 @@ class Image extends AbstractEntity
     public function setCar(Car $car): self
     {
         // set the owning side of the relation if necessary
-        if ($car->getThumbnailId() !== $this) {
-            $car->setThumbnailId($this);
+        if ($car->getThumbnail() !== $this) {
+            $car->setThumbnail($this);
         }
 
         $this->car = $car;

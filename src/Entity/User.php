@@ -30,10 +30,10 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\OneToMany(mappedBy: 'created_user_id', targetEntity: Car::class)]
+    #[ORM\OneToMany(mappedBy: 'createdUser', targetEntity: Car::class)]
     private $cars;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Rent::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rent::class)]
     private $rents;
 
     public function __construct()
@@ -151,7 +151,7 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     {
         if (!$this->cars->contains($car)) {
             $this->cars[] = $car;
-            $car->setCreatedUserId($this);
+            $car->setCreatedUser($this);
         }
 
         return $this;
@@ -161,8 +161,8 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     {
         if ($this->cars->removeElement($car)) {
             // set the owning side to null (unless already changed)
-            if ($car->getCreatedUserId() === $this) {
-                $car->setCreatedUserId(null);
+            if ($car->getCreatedUser() === $this) {
+                $car->setCreatedUser(null);
             }
         }
 

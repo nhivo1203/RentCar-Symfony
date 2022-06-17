@@ -37,22 +37,22 @@ class Car extends \App\Entity\AbstractEntity
     private $year;
 
     #[ORM\Column(type: 'date_immutable')]
-    private $created_at;
+    private $createdAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cars')]
     #[ORM\JoinColumn(nullable: false)]
-    private $created_userId;
+    private $createdUser;
 
     #[ORM\OneToOne(inversedBy: 'car', targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private $thumbnailId;
+    private $thumbnail;
 
-    #[ORM\OneToMany(mappedBy: 'car_id', targetEntity: Rent::class)]
+    #[ORM\OneToMany(mappedBy: 'car', targetEntity: Rent::class)]
     private $rents;
 
     public function __construct()
     {
-        $this->created_at = new \DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
         $this->rents = new ArrayCollection();
     }
 
@@ -147,36 +147,36 @@ class Car extends \App\Entity\AbstractEntity
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getCreatedUserId(): ?User
+    public function getCreatedUser(): ?User
     {
-        return $this->created_userId;
+        return $this->createdUser;
     }
 
-    public function setCreatedUserId(int $created_userId): self
+    public function setCreatedUser(?User $createdUser): self
     {
-        $this->created_userId = $created_userId;
+        $this->createdUser = $createdUser;
 
         return $this;
     }
 
-    public function getThumbnailId(): ?Image
+    public function getThumbnail(): ?Image
     {
-        return $this->thumbnailId;
+        return $this->thumbnail;
     }
 
-    public function setThumbnailId(int $thumbnailId): self
+    public function setThumbnail(Image $thumbnail): self
     {
-        $this->thumbnailId = $thumbnailId;
+        $this->thumbnail = $thumbnail;
 
         return $this;
     }
