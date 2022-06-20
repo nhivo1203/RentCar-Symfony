@@ -6,52 +6,75 @@ use App\Repository\CarRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
-class Car
+class Car extends \App\Entity\AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $color;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $brand;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'string', length: 255)]
     private $price;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'integer', nullable: true)]
     private $seats;
 
+    /**
+     * @Assert\NotBlank
+     */
     #[ORM\Column(type: 'integer', nullable: true)]
     private $year;
 
     #[ORM\Column(type: 'date_immutable')]
-    private $created_at;
+    private $createdAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cars')]
     #[ORM\JoinColumn(nullable: false)]
-    private $created_user;
+    private $createdUser;
 
     #[ORM\OneToOne(inversedBy: 'car', targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private $thumbnail;
 
-    #[ORM\OneToMany(mappedBy: 'car_id', targetEntity: Rent::class)]
+    #[ORM\OneToMany(mappedBy: 'car', targetEntity: Rent::class)]
     private $rents;
 
     public function __construct()
     {
+        $this->createdAt = new \DateTimeImmutable();
         $this->rents = new ArrayCollection();
     }
 
@@ -146,24 +169,24 @@ class Car
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getCreatedUser(): ?User
     {
-        return $this->created_user;
+        return $this->createdUser;
     }
 
-    public function setCreatedUser(?User $created_user): self
+    public function setCreatedUser(?User $createdUser): self
     {
-        $this->created_user = $created_user;
+        $this->createdUser = $createdUser;
 
         return $this;
     }

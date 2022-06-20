@@ -7,15 +7,18 @@ use JetBrains\PhpStorm\ArrayShape;
 
 class CarTransformer
 {
-    #[ArrayShape(['id' => "int|null", 'name' => "null|string", 'brand' => "null|string", 'type' => "null|string", 'image' => "null|string", 'price' => "int|null"])]
     public function transform(Car $car): array
     {
         return [
             'id' => $car->getId(),
             'name' => $car->getName(),
+            'description' => $car->getDescription(),
+            'color' => $car->getColor(),
             'brand' => $car->getBrand(),
-            'type' => $car->getType(),
-            'image' => $car->getImage(),
+            'seats' => $car->getSeats(),
+            'year' => $car->getYear(),
+            'createdUser' => $car->getCreatedUser()->getName(),
+            'thumbnail' => $car->getThumbnail()->getPath(),
             'price' => $car->getPrice(),
         ];
     }

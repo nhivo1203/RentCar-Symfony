@@ -6,7 +6,7 @@ use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
-class Image
+class Image extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,10 +17,15 @@ class Image
     private $path;
 
     #[ORM\Column(type: 'date_immutable', nullable: true)]
-    private $created_at;
+    private $createdAt;
 
-    #[ORM\OneToOne(mappedBy: 'thumbnail_id', targetEntity: Car::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'thumbnail', targetEntity: Car::class, cascade: ['persist', 'remove'])]
     private $car;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -41,12 +46,12 @@ class Image
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(?\DateTimeImmutable $created_at): self
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }

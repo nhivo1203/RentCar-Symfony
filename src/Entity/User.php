@@ -30,10 +30,10 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    #[ORM\OneToMany(mappedBy: 'created_user_id', targetEntity: Car::class)]
+    #[ORM\OneToMany(mappedBy: 'createdUser', targetEntity: Car::class)]
     private $cars;
 
-    #[ORM\OneToMany(mappedBy: 'user_id', targetEntity: Rent::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rent::class)]
     private $rents;
 
     public function __construct()
@@ -48,12 +48,14 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
+
         // $this->plainPassword = null;
     }
 
     /**
      * @see UserInterface
      */
+
     #[ArrayShape(['id' => "int|null", 'email' => "null|string", 'roles' => "array|string[]"])]
     public function jsonSerialize(): array
     {
@@ -197,4 +199,3 @@ class User extends AbstractEntity implements UserInterface, PasswordAuthenticate
         return $this;
     }
 }
-
