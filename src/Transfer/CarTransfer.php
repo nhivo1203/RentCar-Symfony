@@ -11,10 +11,9 @@ class CarTransfer
     /**
      * @throws JsonException
      */
-    public function transfer(Request $request): Car
+    public function transfer(array $requestData): Car
     {
         $car = new Car();
-        $requestData = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $car->setName($requestData['name']);
         $car->setDescription($requestData['description']);
         $car->setColor($requestData['color']);
