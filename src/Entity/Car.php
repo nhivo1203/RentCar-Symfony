@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
-class Car extends \App\Entity\AbstractEntity
+class Car extends AbstractEntity
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -60,6 +60,9 @@ class Car extends \App\Entity\AbstractEntity
 
     #[ORM\Column(type: 'date_immutable')]
     private $createdAt;
+
+    #[ORM\Column(type: 'date_immutable')]
+    private $deletedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cars')]
     #[ORM\JoinColumn(nullable: false)]
@@ -231,5 +234,21 @@ class Car extends \App\Entity\AbstractEntity
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeletedAt(): mixed
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * @param mixed $deletedAt
+     */
+    public function setDeletedAt(mixed $deletedAt): void
+    {
+        $this->deletedAt = $deletedAt;
     }
 }

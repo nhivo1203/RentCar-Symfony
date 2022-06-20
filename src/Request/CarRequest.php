@@ -19,9 +19,9 @@ class CarRequest extends BaseRequest
     private ?int $limit = 10;
 
     #[Assert\Choice(
-        choices: ['createdAt', 'price'],
+        choices: ['createdAt.asc','createdAt.desc', 'price.asc', 'price.desc'],
     )]
-    private ?string $orderBy = 'createdAt.asc';
+    private ?string $orderBy = 'createdAt.de sc';
 
     /**
      * @return string|null
@@ -85,5 +85,21 @@ class CarRequest extends BaseRequest
     public function setLimit(?int $limit): void
     {
         $this->limit = $limit;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getOrderBy(): ?string
+    {
+        return $this->orderBy;
+    }
+
+    /**
+     * @param string|null $orderBy
+     */
+    public function setOrderBy(?string $orderBy): void
+    {
+        $this->orderBy = $orderBy;
     }
 }
