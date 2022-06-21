@@ -100,12 +100,18 @@ class CarService
     }
 
     /**
-     * @throws EntityNotFoundException
+     * @param Car $car
+     * @param array $requestData
+     * @return Car
      */
     public function updateCar(Car $car, array $requestData): Car
     {
         $carUpdate = $this->carMapper->mapping($car, $requestData);
         $this->carRepository->add($carUpdate, true);
+
+        $event = new CarEvent($car);
+        $this->dispatcher->dispatch($event, CarEvent::UPDATE);
+
         return $carUpdate;
     }
 
@@ -135,6 +141,10 @@ class CarService
         }
         $car->setDeletedAt(new \DateTimeImmutable());
         $this->carRepository->add($car, true);
+
+        $event = new CarEvent($car);
+        $this->dispatcher->dispatch($event, CarEvent::DELETE);
+
         return $car;
     }
 }

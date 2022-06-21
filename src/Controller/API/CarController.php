@@ -26,6 +26,13 @@ class CarController extends AbstractController
      * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
      * @Route("/api/cars/add", name="api_add_car", methods={"POST"})
      * @throws JsonException
+     * @param Request $request
+     * @param ValidatorInterface $validator
+     * @param CarTransfer $carTransfer
+     * @param CarService $carService
+     * @param CarTransformer $carTransformer
+     * @return JsonResponse
+     * @throws JsonException
      */
     public function createCar(
         Request            $request,
@@ -49,7 +56,11 @@ class CarController extends AbstractController
     /**
      * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
      * @Route("/api/cars/update/{id}", name="api_update_car", methods={"PUT","PATCH"})
-     * @throws EntityNotFoundException
+     * @param Car $car
+     * @param Request $request
+     * @param CarService $carService
+     * @param CarTransformer $carTransformer
+     * @return JsonResponse
      */
     public function updateCar(
         Car         $car,
@@ -67,6 +78,10 @@ class CarController extends AbstractController
      * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
      * @Route("/api/cars/delete/{id}", name="api_delete_car", methods={"DELETE"})
      * @throws EntityNotFoundException
+     * @param int $id
+     * @param CarService $carService
+     * @return JsonResponse
+     * @throws EntityNotFoundException
      */
     public function deleteCar(int $id, CarService $carService): JsonResponse
     {
@@ -76,6 +91,11 @@ class CarController extends AbstractController
 
     /**
      * @Route("/api/car/all", name="api_car_list_all")
+     * @param Request $request
+     * @param ValidatorInterface $validator
+     * @param CarRequest $carRequest
+     * @param CarService $carService
+     * @return JsonResponse
      */
     public function getAllCars(
         Request            $request,
@@ -99,6 +119,11 @@ class CarController extends AbstractController
 
     /**
      * @Route("/api/car/{id<\d+>}", name="api_get_car_details")
+     * @throws EntityNotFoundException
+     * @param int $id
+     * @param CarService $carService
+     * @param CarTransformer $carTransformer
+     * @return JsonResponse
      * @throws EntityNotFoundException
      */
     public function getCarDetails(int $id, CarService $carService, CarTransformer $carTransformer): JsonResponse
