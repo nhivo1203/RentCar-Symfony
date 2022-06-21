@@ -8,7 +8,7 @@ use App\Entity\User;
 use App\Event\CarEvent;
 use App\Mapper\CarMapper;
 use App\Repository\CarRepository;
-use App\Request\CarRequest;
+use App\Request\GetCarRequest;
 use App\Transformer\CarTransformer;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -66,7 +66,7 @@ class CarService
         return $car;
     }
 
-    public function getAllCars(CarRequest $requestData): array
+    public function getAllCars(GetCarRequest $requestData): array
     {
         $cars = $this->carRepository->getAll($requestData);
         $carsData = [];
@@ -81,14 +81,12 @@ class CarService
     /**
      * @param Car $car
      * @param User $user
-     * @param string $thumbnailURL
+     * @param int $thumbnailId
      * @return Car
      */
-    public function addCar(Car $car, User $user, string $thumbnailURL): Car
+    public function addCar(Car $car, User $user, int $thumbnailId): Car
     {
-        $image = new Image();
-        $image->setPath($thumbnailURL);
-        $this->imageService->addImage($image);
+        $image = $this->imageService->getImage($thumbnailId);
         $car->setThumbnail($image);
         $car->setCreatedUser($user);
         $this->carRepository->add($car, true);

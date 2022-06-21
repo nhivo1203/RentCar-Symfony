@@ -4,7 +4,12 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    brochures_directory: '%kernel.project_dir%/public/uploads/'
+    amazon.s3.key: '%env(S3_ACCESS_KEY_ID)%'
+    amazon.s3.secret: '%env(S3_SECRET_ACCESS_KEY)%'
+    amazon.s3.bucket: '%env(S3_BUCKET_NAME)%'
+    amazon.s3.region: '%env(S3_BUCKET_REGION)%'
+    amazon.s3.version: "latest"
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -39,5 +44,15 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
 
+    App\Services\UploadImageService:
+        arguments:
+            $targetDirectory: '%brochures_directory%'
+    App\Manager\FileManager:
+        arguments:
+            $key: '%amazon.s3.key%'
+            $secret: '%amazon.s3.secret%'
+            $bucket: '%amazon.s3.bucket%'
+            $region: '%amazon.s3.region%'
+            $version: '%amazon.s3.version%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

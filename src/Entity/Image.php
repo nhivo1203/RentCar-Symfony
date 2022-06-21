@@ -27,6 +27,14 @@ class Image extends AbstractEntity
         $this->createdAt = new \DateTimeImmutable();
     }
 
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,4 +80,5 @@ class Image extends AbstractEntity
 
         return $this;
     }
+
 }

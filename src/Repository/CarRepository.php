@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Car;
-use App\Request\CarRequest;
+use App\Request\GetCarRequest;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,7 +22,7 @@ class CarRepository extends BaseRepository
     {
         parent::__construct($registry, Car::class);
     }
-    public function getAll(CarRequest $carRequest): array
+    public function getAll(GetCarRequest $carRequest): array
     {
 
         $cars = $this->createQueryBuilder(static::CAR_ALIAS);

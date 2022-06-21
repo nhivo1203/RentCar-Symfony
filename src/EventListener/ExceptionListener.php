@@ -15,6 +15,8 @@ class ExceptionListener
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
+        var_dump($exception->getMessage());
+        var_dump($exception->getTraceAsString());
         if ($exception instanceof UnauthorizedHttpException) {
             $response = $this->errors("Unauthorized", Response::HTTP_UNAUTHORIZED);
         }

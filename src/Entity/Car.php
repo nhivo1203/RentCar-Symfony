@@ -11,6 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: CarRepository::class)]
 class Car extends AbstractEntity
 {
+    public const SEATS_LIST = [4, 7, 16];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -50,6 +52,9 @@ class Car extends AbstractEntity
      * @Assert\NotBlank
      */
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Choice(
+        choices: self::SEATS_LIST,
+    )]
     private $seats;
 
     /**

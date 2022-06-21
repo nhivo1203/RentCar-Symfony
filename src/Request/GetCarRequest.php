@@ -4,7 +4,7 @@ namespace App\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CarRequest extends BaseRequest
+class GetCarRequest extends BaseRequest
 {
     #[Assert\Blank]
     private ?string $color = '';

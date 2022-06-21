@@ -3,7 +3,7 @@
 namespace App\Controller\API;
 
 use App\Entity\Car;
-use App\Request\CarRequest;
+use App\Request\GetCarRequest;
 use App\Services\CarService;
 use App\Traits\JsonResponseTrait;
 use App\Transfer\CarTransfer;
@@ -24,7 +24,7 @@ class CarController extends AbstractController
 
     /**
      * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
-     * @Route("/api/cars/add", name="api_add_car", methods={"POST"})
+     * @Route("/api/cars", name="api_add_car", methods={"POST"})
      * @throws JsonException
      * @param Request $request
      * @param ValidatorInterface $validator
@@ -48,14 +48,14 @@ class CarController extends AbstractController
         if (count($errors) > 0) {
             return $this->errors('Some fields is blank');
         }
-        $thumbnailURL = $request->toArray()['thumbnail'];
-        $carService->addCar($car, $user, $thumbnailURL);
+        $thumbnailId = $request->toArray()['thumbnail'];
+        $carService->addCar($car, $user, $thumbnailId);
         return $this->success($carTransformer->transform($car), Response::HTTP_CREATED);
     }
 
     /**
      * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
-     * @Route("/api/cars/update/{id}", name="api_update_car", methods={"PUT","PATCH"})
+     * @Route("/api/cars", name="api_update_car", methods={"PUT","PATCH"})
      * @param Car $car
      * @param Request $request
      * @param CarService $carService
@@ -76,7 +76,7 @@ class CarController extends AbstractController
 
     /**
      * @IsGranted("ROLE_ADMIN", statusCode=403, message="Access denied")
-     * @Route("/api/cars/delete/{id}", name="api_delete_car", methods={"DELETE"})
+     * @Route("/api/cars", name="api_delete_car", methods={"DELETE"})
      * @throws EntityNotFoundException
      * @param int $id
      * @param CarService $carService
@@ -90,17 +90,17 @@ class CarController extends AbstractController
     }
 
     /**
-     * @Route("/api/cars/all", name="api_car_list_all")
+     * @Route("/api/cars/all", name="api_car_list_all", methods={"GET"})
      * @param Request $request
      * @param ValidatorInterface $validator
-     * @param CarRequest $carRequest
+     * @param GetCarRequest $carRequest
      * @param CarService $carService
      * @return JsonResponse
      */
     public function getAllCars(
         Request            $request,
         ValidatorInterface $validator,
-        CarRequest         $carRequest,
+        GetCarRequest      $carRequest,
         CarService         $carService,
     ): JsonResponse
     {
@@ -118,7 +118,7 @@ class CarController extends AbstractController
     }
 
     /**
-     * @Route("/api/car/{id<\d+>}", name="api_get_car_details")
+     * @Route("/api/car/{id<\d+>}", name="api_get_car_details", methods={"GET"})
      * @throws EntityNotFoundException
      * @param int $id
      * @param CarService $carService
