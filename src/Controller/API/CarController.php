@@ -111,9 +111,6 @@ class CarController extends AbstractController
             return $this->errors('Some fields is blank');
         }
         $carsData = $carService->getAllCars($listCarsRequest);
-        if (!$carsData) {
-            return $this->errors('No cars found', Response::HTTP_NOT_FOUND);
-        }
         return $this->success($carsData);
     }
 
