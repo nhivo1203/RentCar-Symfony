@@ -90,7 +90,7 @@ class CarController extends AbstractController
     }
 
     /**
-     * @Route("/api/car/all", name="api_car_list_all")
+     * @Route("/api/cars/all", name="api_car_list_all")
      * @param Request $request
      * @param ValidatorInterface $validator
      * @param CarRequest $carRequest

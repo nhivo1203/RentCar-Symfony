@@ -21,7 +21,7 @@ class CarRequest extends BaseRequest
     #[Assert\Choice(
         choices: ['createdAt.asc','createdAt.desc', 'price.asc', 'price.desc'],
     )]
-    private ?string $orderBy = 'createdAt.de sc';
+    private ?string $orderBy = 'createdAt.desc';
 
     /**
      * @return string|null
