@@ -14,6 +14,11 @@ class ImageService
         $this->imageRepository = $imageRepository;
     }
 
+    public function getImage(int $imageId): Image
+    {
+        return $this->imageRepository->find($imageId);
+    }
+
     public function addImage(Image $image): Image
     {
         $this->imageRepository->add($image, true);

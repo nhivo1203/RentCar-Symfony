@@ -20,6 +20,8 @@ class CarTransformer
             'createdUser' => $car->getCreatedUser()->getName(),
             'thumbnail' => $car->getThumbnail()->getPath(),
             'price' => $car->getPrice(),
-        ];
+            'createdAt' => $car->getCreatedAt(),
+            'deletedAt' => $car->getDeletedAt(),
+            ];
     }
 }

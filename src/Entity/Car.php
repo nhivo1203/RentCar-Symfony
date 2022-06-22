@@ -9,8 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
-class Car extends \App\Entity\AbstractEntity
+class Car extends AbstractEntity
 {
+    public const SEATS_LIST = [4, 7, 16];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -50,6 +52,9 @@ class Car extends \App\Entity\AbstractEntity
      * @Assert\NotBlank
      */
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Choice(
+        choices: self::SEATS_LIST,
+    )]
     private $seats;
 
     /**
@@ -60,6 +65,9 @@ class Car extends \App\Entity\AbstractEntity
 
     #[ORM\Column(type: 'date_immutable')]
     private $createdAt;
+
+    #[ORM\Column(type: 'date_immutable')]
+    private $deletedAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cars')]
     #[ORM\JoinColumn(nullable: false)]
@@ -231,5 +239,21 @@ class Car extends \App\Entity\AbstractEntity
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeletedAt(): mixed
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * @param mixed $deletedAt
+     */
+    public function setDeletedAt(mixed $deletedAt): void
+    {
+        $this->deletedAt = $deletedAt;
     }
 }
