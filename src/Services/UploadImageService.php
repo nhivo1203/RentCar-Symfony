@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
-
 use App\Entity\Image;
 use App\Manager\FileManager;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadImageService
@@ -35,7 +33,7 @@ class UploadImageService
         return $this->getImage($thumbnailURL);
     }
 
-    public function upload(?UploadedFile $file): ?Image
+    public function uploadLocalImage(?UploadedFile $file): ?Image
     {
         if ($file === null) {
             return null;

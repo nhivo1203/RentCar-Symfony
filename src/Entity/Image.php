@@ -80,5 +80,4 @@ class Image extends AbstractEntity
 
         return $this;
     }
-
 }

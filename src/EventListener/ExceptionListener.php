@@ -16,12 +16,12 @@ class ExceptionListener
     {
         $exception = $event->getThrowable();
         if ($exception instanceof UnauthorizedHttpException) {
-            $response = $this->errors("Unauthorized", Response::HTTP_UNAUTHORIZED);
+            $response = $this->errors(["Unauthorized"], Response::HTTP_UNAUTHORIZED);
         }
         if ($exception instanceof HttpExceptionInterface) {
-            $response = $this->errors($exception->getMessage(), Response::HTTP_EXPECTATION_FAILED);
+            $response = $this->errors([$exception->getMessage()], Response::HTTP_EXPECTATION_FAILED);
         } else {
-            $response = $this->errors("Internal error", Response::HTTP_INTERNAL_SERVER_ERROR);
+            $response = $this->errors(["Internal error"], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         // sends the modified response object to the event

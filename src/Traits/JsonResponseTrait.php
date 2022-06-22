@@ -16,13 +16,13 @@ trait JsonResponseTrait
     }
 
     public function errors(
-        string $messages,
+        array $errors,
         int $statusCode = Response::HTTP_BAD_REQUEST,
         array $headers = []
     ): JsonResponse {
         return new JsonResponse([
             'status' => "errors",
-            'messages' => $messages,
+            'errors' => $errors,
         ], $statusCode, $headers);
     }
 }

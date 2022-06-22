@@ -40,13 +40,12 @@ class CarService
      * @param CarTransformer $carTransformer
      */
     public function __construct(
-        CarRepository            $carRepository,
+        CarRepository $carRepository,
         EventDispatcherInterface $dispatcher,
-        ImageService             $imageService,
-        CarTransformer           $carTransformer,
-        CarMapper                $carMapper
-    )
-    {
+        ImageService $imageService,
+        CarTransformer $carTransformer,
+        CarMapper $carMapper
+    ) {
         $this->imageService = $imageService;
         $this->carRepository = $carRepository;
         $this->dispatcher = $dispatcher;
@@ -116,12 +115,8 @@ class CarService
     /**
      * @throws EntityNotFoundException
      */
-    public function deleteCar(int $carId): void
+    public function deleteCar(Car $car): void
     {
-        $car = $this->carRepository->find($carId);
-        if (!$car) {
-            throw new EntityNotFoundException('Car with id ' . $carId . ' does not exist!');
-        }
         $this->carRepository->remove($car, true);
 
         $event = new CarEvent($car);

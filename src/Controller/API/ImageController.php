@@ -20,17 +20,15 @@ class ImageController extends AbstractController
      * @Route("/api/image", name="api_upload_image", methods={"POST"})
      */
     public function uploadImage(
-        Request            $request,
+        Request $request,
         UploadImageService $uploadImageService,
-        ImageTransformer   $imageTransformer
-
-    ): JsonResponse
-    {
+        ImageTransformer $imageTransformer
+    ): JsonResponse {
         $file = $request->files->get('thumbnail');
         $image = $uploadImageService->uploadS3Image($file);
 
         if ($image === null) {
-            return $this->errors('Cannot upload thumbnail now');
+            return $this->errors(['Cannot upload thumbnail now']);
         }
 
         return $this->success($imageTransformer->transform($image));

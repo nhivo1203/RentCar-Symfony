@@ -16,7 +16,7 @@ class CarMapper
 
     public function mapping(Car $car, array $requestData): Car
     {
-        $thumbnailId = $requestData['thumbnail'];
+        $thumbnailId = $requestData['thumbnail'] ?? '';
         $thumbnail = $this->imageRepository->find($thumbnailId);
 
         $car->setName($requestData['name'] ?? $car->getName())

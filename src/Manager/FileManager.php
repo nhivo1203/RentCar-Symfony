@@ -16,13 +16,12 @@ class FileManager
     private string $version;
 
     public function __construct(
-        $key ,
+        $key,
         $secret,
         $bucket,
         $region,
         $version
-    )
-    {
+    ) {
         $this->bucket = $bucket;
         $this->region = $region;
         $this->key = $key;

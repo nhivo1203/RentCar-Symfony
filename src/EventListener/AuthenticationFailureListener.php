@@ -12,7 +12,7 @@ class AuthenticationFailureListener
 
     public function onAuthenticationFailureResponse(AuthenticationFailureEvent $event): void
     {
-        $response = $this->errors('Credentials invalid');
+        $response = $this->errors(['Credentials invalid']);
 
         $event->setResponse($response);
     }
