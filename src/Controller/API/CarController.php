@@ -142,17 +142,18 @@ class CarController extends AbstractController
     }
 
     /**
-     * @Route("/api/car/{id<\d+>}", name="api_get_car_details", methods={"GET"})
+     * @Route("/api/cars/{id<\d+>}", name="api_get_car_details", methods={"GET"})
      * @param int $id
      * @param CarService $carService
      * @param CarTransformer $carTransformer
      * @return JsonResponse
-     * @throws EntityNotFoundException
-     * @throws EntityNotFoundException
      */
     public function getCarDetails(int $id, CarService $carService, CarTransformer $carTransformer): JsonResponse
     {
         $car = $carService->getCar($id);
+        if ($car === null) {
+            return $this->errors(['Not Found'], Response::HTTP_NOT_FOUND);
+        }
         $carData = $carTransformer->transform($car);
         return $this->success($carData);
     }

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Entity\Car;
-use App\Entity\Image;
 use App\Entity\User;
 use App\Event\CarEvent;
 use App\Mapper\CarMapper;
@@ -53,16 +52,9 @@ class CarService
         $this->carMapper = $carMapper;
     }
 
-    /**
-     * @throws EntityNotFoundException
-     */
-    public function getCar(int $carId): Car
+    public function getCar(int $carId): ?Car
     {
-        $car = $this->carRepository->find($carId);
-        if (!$car) {
-            throw new EntityNotFoundException('Car with id ' . $carId . ' does not exist!');
-        }
-        return $car;
+        return $this->carRepository->find($carId);
     }
 
     public function getAllCars(GetCarRequest $requestData): array
