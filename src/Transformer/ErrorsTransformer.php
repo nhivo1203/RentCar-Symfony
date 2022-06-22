@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Transfer;
+namespace App\Transformer;
 
-class ErrorsTransfer
+class ErrorsTransformer
 {
     public function transfer(object $errors): array
     {

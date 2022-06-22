@@ -23,7 +23,7 @@ class PatchCarRequest extends BaseRequest
     #[Assert\Type('numeric')]
     private $price;
 
-    #[Assert\Type('integer')]
+    #[Assert\Type('numeric')]
     #[Assert\Choice(
         choices: self::SEATS_LIST,
     )]

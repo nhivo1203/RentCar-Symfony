@@ -10,8 +10,8 @@ use App\Request\PutCarRequest;
 use App\Services\CarService;
 use App\Traits\JsonResponseTrait;
 use App\Transfer\CarTransfer;
-use App\Transfer\ErrorsTransfer;
 use App\Transformer\CarTransformer;
+use App\Transformer\ErrorsTransformer;
 use Doctrine\ORM\EntityNotFoundException;
 use JsonException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -33,7 +33,7 @@ class CarController extends AbstractController
      * @param ValidatorInterface $validator
      * @param CarTransfer $carTransfer
      * @param CarService $carService
-     * @param ErrorsTransfer $errorsTransfer
+     * @param ErrorsTransformer $errorsTransformer
      * @return JsonResponse
      * @throws JsonException
      */
@@ -42,13 +42,13 @@ class CarController extends AbstractController
         ValidatorInterface $validator,
         CarTransfer $carTransfer,
         CarService $carService,
-        ErrorsTransfer $errorsTransfer,
+        ErrorsTransformer $errorsTransformer,
     ): JsonResponse {
         $car = $carTransfer->transfer($request->toArray());
         $user = $this->getUser();
         $errors = $validator->validate($car);
         if (count($errors) > 0) {
-            return $this->errors($errorsTransfer->transfer($errors));
+            return $this->errors($errorsTransformer->transfer($errors));
         }
         $thumbnailId = $request->toArray()['thumbnail'];
         $carService->addCar($car, $user, $thumbnailId);
@@ -64,7 +64,7 @@ class CarController extends AbstractController
      * @param PutCarRequest $putCarRequest
      * @param ValidatorInterface $validator
      * @param CarService $carService
-     * @param ErrorsTransfer $errorsTransfer
+     * @param ErrorsTransformer $errorsTransformer
      * @return JsonResponse
      */
     public function updatePutCar(
@@ -73,9 +73,9 @@ class CarController extends AbstractController
         PutCarRequest $putCarRequest,
         ValidatorInterface $validator,
         CarService $carService,
-        ErrorsTransfer $errorsTransfer
+        ErrorsTransformer $errorsTransformer
     ): JsonResponse {
-        return $this->updateCar($request, $putCarRequest, $validator, $errorsTransfer, $carService, $car);
+        return $this->updateCar($request, $putCarRequest, $validator, $errorsTransformer, $carService, $car);
     }
 
 
@@ -87,7 +87,7 @@ class CarController extends AbstractController
      * @param PatchCarRequest $patchCarRequest
      * @param ValidatorInterface $validator
      * @param CarService $carService
-     * @param ErrorsTransfer $errorsTransfer
+     * @param ErrorsTransformer $errorsTransformer
      * @return JsonResponse
      */
     public function updatePatchCar(
@@ -96,9 +96,9 @@ class CarController extends AbstractController
         PatchCarRequest $patchCarRequest,
         ValidatorInterface $validator,
         CarService $carService,
-        ErrorsTransfer $errorsTransfer
+        ErrorsTransformer $errorsTransformer
     ): JsonResponse {
-        return $this->updateCar($request, $patchCarRequest, $validator, $errorsTransfer, $carService, $car);
+        return $this->updateCar($request, $patchCarRequest, $validator, $errorsTransformer, $carService, $car);
     }
 
     /**
@@ -120,7 +120,7 @@ class CarController extends AbstractController
      * @param Request $request
      * @param ValidatorInterface $validator
      * @param GetCarRequest $getCarRequest
-     * @param ErrorsTransfer $errorsTransfer
+     * @param ErrorsTransformer $errorsTransformer
      * @param CarService $carService
      * @return JsonResponse
      */
@@ -128,14 +128,14 @@ class CarController extends AbstractController
         Request $request,
         ValidatorInterface $validator,
         GetCarRequest $getCarRequest,
-        ErrorsTransfer $errorsTransfer,
+        ErrorsTransformer $errorsTransformer,
         CarService $carService,
     ): JsonResponse {
         $query = $request->query->all();
         $listCarsRequest = $getCarRequest->fromArray($query);
         $errors = $validator->validate($listCarsRequest);
         if (count($errors) > 0) {
-            return $this->errors($errorsTransfer->transfer($errors));
+            return $this->errors($errorsTransformer->transfer($errors));
         }
         $carsData = $carService->getAllCars($listCarsRequest);
         return $this->success($carsData);
@@ -161,7 +161,7 @@ class CarController extends AbstractController
      * @param Request $request
      * @param BaseRequest $updateCarRequest
      * @param ValidatorInterface $validator
-     * @param ErrorsTransfer $errorsTransfer
+     * @param ErrorsTransformer $errorsTransformer
      * @param CarService $carService
      * @param Car $car
      * @return JsonResponse
@@ -170,7 +170,7 @@ class CarController extends AbstractController
         Request $request,
         BaseRequest $updateCarRequest,
         ValidatorInterface $validator,
-        ErrorsTransfer $errorsTransfer,
+        ErrorsTransformer $errorsTransformer,
         CarService $carService,
         Car $car
     ): JsonResponse {
@@ -178,7 +178,7 @@ class CarController extends AbstractController
         $updateRequestData = $updateCarRequest->fromArray($requestData);
         $errors = $validator->validate($updateRequestData);
         if (count($errors) > 0) {
-            return $this->errors($errorsTransfer->transfer($errors));
+            return $this->errors($errorsTransformer->transfer($errors));
         }
         $carService->updateCar($car, $requestData);
         return $this->success([], Response::HTTP_NO_CONTENT);

@@ -33,7 +33,7 @@ class PutCarRequest extends BaseRequest
     #[Assert\NotNull]
     private $price;
 
-    #[Assert\Type('integer')]
+    #[Assert\Type('numeric')]
     #[Assert\NotBlank]
     #[Assert\NotNull]
     #[Assert\Choice(
