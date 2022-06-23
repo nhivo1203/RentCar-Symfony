@@ -37,6 +37,7 @@ class CarService
      * @param EventDispatcherInterface $dispatcher
      * @param ImageService $imageService
      * @param CarTransformer $carTransformer
+     * @param CarMapper $carMapper
      */
     public function __construct(
         CarRepository $carRepository,

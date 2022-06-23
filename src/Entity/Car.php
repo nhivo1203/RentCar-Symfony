@@ -86,6 +86,14 @@ class Car extends AbstractEntity
         $this->rents = new ArrayCollection();
     }
 
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -256,4 +264,6 @@ class Car extends AbstractEntity
     {
         $this->deletedAt = $deletedAt;
     }
+
+
 }
