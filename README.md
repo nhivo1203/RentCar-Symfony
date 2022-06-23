@@ -2,10 +2,6 @@
     <img src="https://symfony.com/logos/symfony_black_02.svg">
 </a></p>
 
-[Symfony][1] is a **PHP framework** for web and console applications and a set
-of reusable **PHP components**. Symfony is used by thousands of web
-applications and most of the [popular PHP projects][2].
-
 About Project
 ------------
 
@@ -15,6 +11,15 @@ Unlock Programing This is a new repository for unlock training
 Dinh** and **Mr. Tinh Le**
 
 This is RentCar Project built on Symfony framework.
+
+Requirements
+------------
+```bash
+* PHP 8.1 or higher;
+* Mysql Server
+* PDO-MySQL PHP extension enabled;
+* and the [usual Symfony application requirements][2].
+```
 
 Installation
 ------------

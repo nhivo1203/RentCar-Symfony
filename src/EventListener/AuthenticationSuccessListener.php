@@ -12,13 +12,6 @@ class AuthenticationSuccessListener
 {
     use JsonResponseTrait;
 
-    private SerializerInterface $serializer;
-
-    public function __construct(SerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
-    }
-
     public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event): void
     {
         $token = $event->getData()['token'];

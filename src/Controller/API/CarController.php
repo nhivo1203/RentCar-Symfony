@@ -12,7 +12,6 @@ use App\Traits\JsonResponseTrait;
 use App\Transfer\CarTransfer;
 use App\Transformer\CarTransformer;
 use App\Transformer\ErrorsTransformer;
-use Doctrine\ORM\EntityNotFoundException;
 use JsonException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -107,11 +106,10 @@ class CarController extends AbstractController
      * @param Car $car
      * @param CarService $carService
      * @return JsonResponse
-     * @throws EntityNotFoundException
      */
     public function deleteCar(Car $car, CarService $carService): JsonResponse
     {
-        $carService->deleteCar($car);
+        $carService->hardDeleteCar($car);
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
 
@@ -155,6 +153,7 @@ class CarController extends AbstractController
             return $this->errors(['Not Found'], Response::HTTP_NOT_FOUND);
         }
         $carData = $carTransformer->transform($car);
+
         return $this->success($carData);
     }
 

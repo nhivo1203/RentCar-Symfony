@@ -5,10 +5,12 @@ namespace App\Manager;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileManager
 {
+    private string $targetDirectory;
     private string $bucket;
     private string $region;
     private string $key;
@@ -16,12 +18,14 @@ class FileManager
     private string $version;
 
     public function __construct(
+        $targetDirectory,
         $key,
         $secret,
         $bucket,
         $region,
         $version
     ) {
+        $this->targetDirectory = $targetDirectory;
         $this->bucket = $bucket;
         $this->region = $region;
         $this->key = $key;
@@ -29,6 +33,28 @@ class FileManager
         $this->version = $version;
     }
 
+    /**
+     * @param $file
+     * @return string|null
+     */
+    public function uploadLocal($file): ?string
+    {
+        if ($file === null) {
+            return null;
+        }
+
+        $fileName = uniqid('', true) . '.' . $file->guessExtension();
+        try {
+            $file->move(
+                $this->targetDirectory,
+                $fileName
+            );
+        } catch (FileException $e) {
+            return null;
+        }
+
+        return 'images/' . $fileName;
+    }
 
     /**
      * @param $file
@@ -58,7 +84,8 @@ class FileManager
         return $path . $filename;
     }
 
-    public function handleUpload(UploadedFile $file): ?string
+
+    public function uploadToS3(UploadedFile $file): ?string
     {
         $fileName = $file->getClientOriginalName();
         $filePath = $this->getFilePath($fileName);
@@ -66,8 +93,7 @@ class FileManager
             return null;
         }
         try {
-            $result = $this->setS3Client($filePath);
-            return $result->get('ObjectURL');
+            return $this->setS3Client($filePath)->get('ObjectURL');
         } catch (S3Exception $e) {
             return null;
         }

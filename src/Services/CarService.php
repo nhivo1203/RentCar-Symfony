@@ -105,9 +105,10 @@ class CarService
     }
 
     /**
-     * @throws EntityNotFoundException
+     * @param Car $car
+     * @return void
      */
-    public function deleteCar(Car $car): void
+    public function hardDeleteCar(Car $car): void
     {
         $this->carRepository->remove($car, true);
 
@@ -118,7 +119,7 @@ class CarService
     /**
      * @throws EntityNotFoundException
      */
-    public function deleteSoftCar(int $carId): Car
+    public function softDeleteCar(int $carId): Car
     {
         $car = $this->carRepository->find($carId);
         if (!$car) {

@@ -44,11 +44,9 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
 
-    App\Services\UploadImageService:
-        arguments:
-            $targetDirectory: '%brochures_directory%'
     App\Manager\FileManager:
         arguments:
+            $targetDirectory: '%brochures_directory%'
             $key: '%amazon.s3.key%'
             $secret: '%amazon.s3.secret%'
             $bucket: '%amazon.s3.bucket%'

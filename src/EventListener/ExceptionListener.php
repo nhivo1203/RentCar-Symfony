@@ -19,7 +19,7 @@ class ExceptionListener
             $response = $this->errors(["Unauthorized"], Response::HTTP_UNAUTHORIZED);
         }
         if ($exception instanceof HttpExceptionInterface) {
-            $response = $this->errors([$exception->getMessage()], Response::HTTP_EXPECTATION_FAILED);
+            $response = $this->errors(['Somethings wrong'], Response::HTTP_EXPECTATION_FAILED);
         } else {
             $response = $this->errors(["Internal error"], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
