@@ -8,9 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CarTransfer
 {
-    /**
-     * @throws JsonException
-     */
     public function transfer(array $requestData): Car
     {
         $car = new Car();

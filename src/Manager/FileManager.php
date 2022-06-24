@@ -12,25 +12,16 @@ class FileManager
 {
     private string $targetDirectory;
     private string $bucket;
-    private string $region;
-    private string $key;
-    private string $secret;
-    private string $version;
+    private S3Client $s3Client;
 
     public function __construct(
         $targetDirectory,
-        $key,
-        $secret,
         $bucket,
-        $region,
-        $version
+        S3Client $s3Client,
     ) {
         $this->targetDirectory = $targetDirectory;
         $this->bucket = $bucket;
-        $this->region = $region;
-        $this->key = $key;
-        $this->secret = $secret;
-        $this->version = $version;
+        $this->s3Client = $s3Client;
     }
 
     /**
@@ -63,12 +54,7 @@ class FileManager
     public function setS3Client($file): Result
     {
         $key = basename($file);
-        $result = new S3Client([
-            'version' => $this->version,
-            'region' => $this->region,
-            'credentials' => ['key' => $this->key, 'secret' => $this->secret]
-        ]);
-        $result = $result->putObject([
+        $result = $this->s3Client->putObject([
             'Bucket' => $this->bucket,
             'Key' => $key,
             'SourceFile' => $file,
