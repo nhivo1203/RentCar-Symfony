@@ -173,9 +173,27 @@ The REST API to the example app is described below.
     Status: 204 No Content
 
 
+### Upload Image
 
+### Request
 
+`POST /api/image`
 
+    Body: form-data
+    {
+        "thumbnail": {{file}},
+    }
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: 200 OK
+    
+    "status": "success",
+    "data": {
+        'id': {{id}},
+        'path: {{path}}
+    }
 
 
     
