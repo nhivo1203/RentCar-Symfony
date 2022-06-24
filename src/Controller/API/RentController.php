@@ -40,8 +40,9 @@ class RentController extends AbstractController
         $addRentRequestData = $addRentRequest->fromArray($requestData);
         $errors = $validator->validate($addRentRequestData);
 
-        if (empty($errors)) {
-            $this->errors($errorsTransformer->transfer($errors));
+        if (!empty($errors)) {
+            $errorsData = $errorsTransformer->transfer($errors)
+            return $this->errors($errorsData);
         }
 
         $carId = $requestData['car'];
