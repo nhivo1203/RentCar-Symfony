@@ -8,6 +8,7 @@ use App\Event\CarEvent;
 use App\Mapper\CarMapper;
 use App\Repository\CarRepository;
 use App\Request\GetCarRequest;
+use App\Transfer\CarTransfer;
 use App\Transformer\CarTransformer;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -15,14 +16,27 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class CarService
 {
     /**
+     * @var CarTransfer
+     */
+    private CarTransfer $carTransfer;
+    /**
      * @var CarRepository
      */
     private CarRepository $carRepository;
 
+    /**
+     * @var CarTransformer
+     */
     private CarTransformer $carTransformer;
 
+    /**
+     * @var CarMapper
+     */
     private CarMapper $carMapper;
 
+    /**
+     * @var ImageService
+     */
     private ImageService $imageService;
 
     /**
@@ -33,18 +47,22 @@ class CarService
     /**
      * CarService constructor.
      *
+     * @param CarTransfer $carTransfer
      * @param CarRepository $carRepository
      * @param EventDispatcherInterface $dispatcher
      * @param ImageService $imageService
      * @param CarTransformer $carTransformer
+     * @param CarMapper $carMapper
      */
     public function __construct(
+        CarTransfer $carTransfer,
         CarRepository $carRepository,
         EventDispatcherInterface $dispatcher,
         ImageService $imageService,
         CarTransformer $carTransformer,
         CarMapper $carMapper
     ) {
+        $this->carTransfer = $carTransfer;
         $this->imageService = $imageService;
         $this->carRepository = $carRepository;
         $this->dispatcher = $dispatcher;
@@ -70,13 +88,14 @@ class CarService
     }
 
     /**
-     * @param Car $car
+     * @param array $requestData
      * @param User $user
      * @param int $thumbnailId
      * @return Car
      */
-    public function addCar(Car $car, User $user, int $thumbnailId): Car
+    public function addCar(array $requestData, User $user, int $thumbnailId): Car
     {
+        $car = $this->carTransfer->transfer($requestData);
         $image = $this->imageService->getImage($thumbnailId);
         $car->setThumbnail($image);
         $car->setCreatedUser($user);
@@ -105,9 +124,10 @@ class CarService
     }
 
     /**
-     * @throws EntityNotFoundException
+     * @param Car $car
+     * @return void
      */
-    public function deleteCar(Car $car): void
+    public function hardDeleteCar(Car $car): void
     {
         $this->carRepository->remove($car, true);
 
@@ -118,7 +138,7 @@ class CarService
     /**
      * @throws EntityNotFoundException
      */
-    public function deleteSoftCar(int $carId): Car
+    public function softDeleteCar(int $carId): Car
     {
         $car = $this->carRepository->find($carId);
         if (!$car) {

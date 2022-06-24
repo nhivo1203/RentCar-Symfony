@@ -18,48 +18,31 @@ class Car extends AbstractEntity
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @Assert\NotBlank
-     */
+
     #[ORM\Column(type: 'string', length: 255)]
     private $name;
 
-    /**
-     * @Assert\NotBlank
-     */
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
 
-    /**
-     * @Assert\NotBlank
-     */
+
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $color;
 
-    /**
-     * @Assert\NotBlank
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $brand;
 
-    /**
-     * @Assert\NotBlank
-     */
+
     #[ORM\Column(type: 'string', length: 255)]
     private $price;
 
-    /**
-     * @Assert\NotBlank
-     */
     #[ORM\Column(type: 'integer', nullable: true)]
     #[Assert\Choice(
         choices: self::SEATS_LIST,
     )]
     private $seats;
 
-    /**
-     * @Assert\NotBlank
-     */
     #[ORM\Column(type: 'integer', nullable: true)]
     private $year;
 
@@ -84,6 +67,14 @@ class Car extends AbstractEntity
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->rents = new ArrayCollection();
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
     }
 
     public function getId(): ?int
@@ -256,4 +247,6 @@ class Car extends AbstractEntity
     {
         $this->deletedAt = $deletedAt;
     }
+
+
 }

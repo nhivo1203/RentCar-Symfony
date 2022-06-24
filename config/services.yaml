@@ -5,11 +5,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     brochures_directory: '%kernel.project_dir%/public/uploads/'
-    amazon.s3.key: '%env(S3_ACCESS_KEY_ID)%'
-    amazon.s3.secret: '%env(S3_SECRET_ACCESS_KEY)%'
     amazon.s3.bucket: '%env(S3_BUCKET_NAME)%'
-    amazon.s3.region: '%env(S3_BUCKET_REGION)%'
-    amazon.s3.version: "latest"
+    amazon.sqs.url: '%env(SQS_URL)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -44,15 +42,23 @@ services:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_invalid, method: onJWTInvalid }
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound }
 
-    App\Services\UploadImageService:
+    Aws\S3\S3Client:
         arguments:
-            $targetDirectory: '%brochures_directory%'
+            - version: 'latest'
+              region: '%env(S3_BUCKET_REGION)%'
+              credentials:
+                  key: '%env(S3_ACCESS_KEY_ID)%'
+                  secret: '%env(S3_SECRET_ACCESS_KEY)%'
+    Aws\Sqs\SqsClient:
+        arguments:
+            - version: 'latest'
+              region: '%env(S3_BUCKET_REGION)%'
+              credentials:
+                  key: '%env(S3_ACCESS_KEY_ID)%'
+                  secret: '%env(S3_SECRET_ACCESS_KEY)%'
     App\Manager\FileManager:
         arguments:
-            $key: '%amazon.s3.key%'
-            $secret: '%amazon.s3.secret%'
+            $targetDirectory: '%brochures_directory%'
             $bucket: '%amazon.s3.bucket%'
-            $region: '%amazon.s3.region%'
-            $version: '%amazon.s3.version%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

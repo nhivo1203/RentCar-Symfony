@@ -26,7 +26,6 @@ class ImageController extends AbstractController
     ): JsonResponse {
         $file = $request->files->get('thumbnail');
         $image = $uploadImageService->uploadS3Image($file);
-
         if ($image === null) {
             return $this->errors(['Cannot upload thumbnail now']);
         }

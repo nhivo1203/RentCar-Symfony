@@ -9,13 +9,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UploadImageService
 {
-    private $targetDirectory;
     private ImageService $imageService;
     private FileManager $fileManager;
 
-    public function __construct($targetDirectory, ImageService $imageService, FileManager $fileManager)
+    public function __construct(ImageService $imageService, FileManager $fileManager)
     {
-        $this->targetDirectory = $targetDirectory;
         $this->imageService = $imageService;
         $this->fileManager = $fileManager;
     }
@@ -25,7 +23,7 @@ class UploadImageService
         if ($file === null) {
             return null;
         }
-        $thumbnailURL = $this->fileManager->handleUpload($file);
+        $thumbnailURL = $this->fileManager->uploadToS3($file);
         if ($thumbnailURL === null) {
             return null;
         }
@@ -35,20 +33,7 @@ class UploadImageService
 
     public function uploadLocalImage(?UploadedFile $file): ?Image
     {
-        if ($file === null) {
-            return null;
-        }
-        $fileName = uniqid('', true) . '.' . $file->guessExtension();
-        try {
-            $file->move(
-                $this->targetDirectory,
-                $fileName
-            );
-        } catch (FileException $e) {
-            return null;
-        }
-        $fileName = 'images/' . $fileName;
-
+        $fileName = $this->fileManager->uploadLocal($file);
         return $this->getImage($fileName);
     }
 

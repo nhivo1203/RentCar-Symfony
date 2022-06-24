@@ -3,17 +3,15 @@
 namespace App\Controller\API;
 
 use App\Entity\Car;
+use App\Request\AddCarRequest;
 use App\Request\BaseRequest;
 use App\Request\GetCarRequest;
 use App\Request\PatchCarRequest;
 use App\Request\PutCarRequest;
 use App\Services\CarService;
 use App\Traits\JsonResponseTrait;
-use App\Transfer\CarTransfer;
 use App\Transformer\CarTransformer;
 use App\Transformer\ErrorsTransformer;
-use Doctrine\ORM\EntityNotFoundException;
-use JsonException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,27 +29,26 @@ class CarController extends AbstractController
      * @Route("/api/cars", name="api_add_car", methods={"POST"})
      * @param Request $request
      * @param ValidatorInterface $validator
-     * @param CarTransfer $carTransfer
      * @param CarService $carService
      * @param ErrorsTransformer $errorsTransformer
      * @return JsonResponse
-     * @throws JsonException
      */
     public function createCar(
         Request $request,
+        AddCarRequest $addCarRequest,
         ValidatorInterface $validator,
-        CarTransfer $carTransfer,
         CarService $carService,
         ErrorsTransformer $errorsTransformer,
     ): JsonResponse {
-        $car = $carTransfer->transfer($request->toArray());
+        $requestData = $request->toArray();
+        $addCarRequestData = $addCarRequest->fromArray($requestData);
         $user = $this->getUser();
-        $errors = $validator->validate($car);
+        $errors = $validator->validate($addCarRequestData);
         if (count($errors) > 0) {
             return $this->errors($errorsTransformer->transfer($errors));
         }
         $thumbnailId = $request->toArray()['thumbnail'];
-        $carService->addCar($car, $user, $thumbnailId);
+        $carService->addCar($requestData, $user, $thumbnailId);
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
 
@@ -107,11 +104,10 @@ class CarController extends AbstractController
      * @param Car $car
      * @param CarService $carService
      * @return JsonResponse
-     * @throws EntityNotFoundException
      */
     public function deleteCar(Car $car, CarService $carService): JsonResponse
     {
-        $carService->deleteCar($car);
+        $carService->hardDeleteCar($car);
         return $this->success([], Response::HTTP_NO_CONTENT);
     }
 
@@ -155,6 +151,7 @@ class CarController extends AbstractController
             return $this->errors(['Not Found'], Response::HTTP_NOT_FOUND);
         }
         $carData = $carTransformer->transform($car);
+
         return $this->success($carData);
     }
 

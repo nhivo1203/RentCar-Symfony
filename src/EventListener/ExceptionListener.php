@@ -3,9 +3,11 @@
 namespace App\EventListener;
 
 use App\Traits\JsonResponseTrait;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class ExceptionListener
@@ -19,7 +21,7 @@ class ExceptionListener
             $response = $this->errors(["Unauthorized"], Response::HTTP_UNAUTHORIZED);
         }
         if ($exception instanceof HttpExceptionInterface) {
-            $response = $this->errors([$exception->getMessage()], Response::HTTP_EXPECTATION_FAILED);
+            $response = $this->errors(['Somethings wrong'], Response::HTTP_EXPECTATION_FAILED);
         } else {
             $response = $this->errors(["Internal error"], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
