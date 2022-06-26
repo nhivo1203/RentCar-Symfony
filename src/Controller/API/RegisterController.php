@@ -23,13 +23,12 @@ class RegisterController extends AbstractController
      * @throws Exception
      */
     public function register(
-        Request         $request,
+        Request $request,
         ValidatorInterface $validator,
         RegisterRequest $registerRequest,
         ErrorsTransformer $errorsTransformer,
         RegisterService $registerService,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $requestData = $request->toArray();
         $registerRequestData = $registerRequest->fromArray($requestData);
         $errors = $validator->validate($registerRequestData);
@@ -38,6 +37,6 @@ class RegisterController extends AbstractController
             return $this->errors($errorsData);
         }
         $registerService->register($requestData);
-        return $this->success([], Response::HTTP_NO_CONTENT );
+        return $this->success([], Response::HTTP_NO_CONTENT);
     }
 }

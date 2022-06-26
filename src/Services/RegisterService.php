@@ -44,7 +44,8 @@ class RegisterService
     /**
      * @throws Exception
      */
-    private function generateRandomString():string {
+    private function generateRandomString(): string 
+    {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
