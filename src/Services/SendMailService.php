@@ -19,7 +19,7 @@ class SendMailService
     /**
      * @throws Exception
      */
-    public function sendSimpleMail(string $email): void
+    public function sendSimpleMail(string $email, string $subject, string $code): void
     {
         $mail = new PHPMailer(true);
         try {
@@ -38,9 +38,8 @@ class SendMailService
 
             //Content
             $mail->isHTML(true);
-            $mail->Subject = 'Here is the subject';
-            $mail->Body = 'This is the HTML message body <b>in bold!</b>';
-            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+            $mail->Subject = $subject;
+            $mail->Body = "This is your code: <b>$code</b>";
             $mail->send();
         } catch (Exception $e) {
             throw new Exception("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
