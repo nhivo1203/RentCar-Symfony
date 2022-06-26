@@ -7,6 +7,10 @@ parameters:
     brochures_directory: '%kernel.project_dir%/public/uploads/'
     amazon.s3.bucket: '%env(S3_BUCKET_NAME)%'
     amazon.sqs.url: '%env(SQS_URL)%'
+    zoho.mail.host: '%env(ZOHO_MAIL_HOST)%'
+    zoho.mail.username: '%env(ZOHO_MAIL_USERNAME)%'
+    zoho.mail.password: '%env(ZOHO_MAIL_PASSWORD)%'
+    zoho.mail.port: '%env(ZOHO_MAIL_PORT)%'
 
 services:
     # default configuration for services in *this* file
@@ -23,6 +27,9 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: [ 'controller.service_arguments' ]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\EventListener\ExceptionListener:

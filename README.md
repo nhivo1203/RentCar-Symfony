@@ -163,7 +163,7 @@ The REST API to the example app is described below.
 
 ### Delete Car
 
-### Request
+### RequestS
 
 `DELETE /api/cars/{id}`
 
@@ -171,13 +171,34 @@ The REST API to the example app is described below.
 
     HTTP/1.1 204 No Content
     Status: 204 No Content
+<<<<<<< HEAD
+=======
 
 
+### Upload Image
 
+### Request
 
+`POST /api/image`
 
+    Body: form-data
+    {
+        "thumbnail": {{file}},
+    }
+
+### Response
+
+    HTTP/1.1 200 OK
+    Status: 200 OK
+    
+    "status": "success",
+    "data": {
+        'id': {{id}},
+        'path: {{path}}
+    }
 
 
     
 
 
+>>>>>>> d7ce8b9... Update README.md
