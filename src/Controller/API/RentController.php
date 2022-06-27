@@ -40,8 +40,8 @@ class RentController extends AbstractController
         $addRentRequestData = $addRentRequest->fromArray($requestData);
         $errors = $validator->validate($addRentRequestData);
 
-        if (!empty($errors)) {
-            $errorsData = $errorsTransformer->transfer($errors)
+        if (count($errors) > 0) {
+            $errorsData = $errorsTransformer->transfer($errors);
             return $this->errors($errorsData);
         }
 
